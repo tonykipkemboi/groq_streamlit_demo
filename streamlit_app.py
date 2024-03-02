@@ -33,6 +33,8 @@ model_option = st.selectbox(
     index=0  # Default to the first model in the list
 )
 
+st.divider()
+
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
     avatar = '🤖' if message["role"] == "assistant" else '👨‍💻'
