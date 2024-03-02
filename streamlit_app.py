@@ -16,7 +16,7 @@ def icon(emoji: str):
 
 icon("💬")
 
-st.title(":rainbow[Groq Chat Streamlit Demo]")
+st.title(":rainbow[Groq Chat Streamlit Demo]", anchor=False)
 
 client = Groq(
     api_key=st.secrets["GROQ_API_KEY"],
