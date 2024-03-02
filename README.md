@@ -1,8 +1,10 @@
 # Groq Chat Streamlit App
 
-![Alt Text](images/groq_demo.png)
+![Demo App Screenshot](images/groq_demo.png)
 
 This Streamlit app integrates with the Groq API to provide a chat interface where users can interact with advanced language models. It allows users to choose between two models for generating responses, enhancing the flexibility and user experience of the chat application.
+
+It is blazing FAST, try it and see! 🏎️ 💨 💨 💨
 
 ## Features
 
@@ -32,8 +34,6 @@ This Streamlit app integrates with the Groq API to provide a chat interface wher
   ```toml
   # .streamlit/secrets.toml
   GROQ_API_KEY="your_api_key_here"
-  `
-
   ```
 
 - **Run the App**:
