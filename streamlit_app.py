@@ -14,9 +14,9 @@ def icon(emoji: str):
     )
 
 
-icon("💬")
+icon("🏎️")
 
-st.title(":rainbow[Groq Chat Streamlit Demo]", anchor=False)
+st.title("Groq Chat Streamlit Demo", anchor=False)
 
 client = Groq(
     api_key=st.secrets["GROQ_API_KEY"],
@@ -26,12 +26,37 @@ client = Groq(
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Model selection
-model_option = st.selectbox(
-    "Choose a model:",
-    ("mixtral-8x7b-32768", "llama2-70b-4096"),
-    index=0  # Default to the first model in the list
-)
+# Define model details
+models = {
+    "llama2-70b-4096": {"name": "LLaMA2-70b-chat", "tokens": 4096, "developer": "Meta"},
+    "mixtral-8x7b-32768": {"name": "Mixtral-8x7b-Instruct-v0.1", "tokens": 32768, "developer": "Mistral"}
+}
+
+# Layout for model selection and max_tokens slider
+col1, col2 = st.columns(2)
+
+with col1:
+    model_option = st.selectbox(
+        "Choose a model:",
+        options=list(models.keys()),
+        format_func=lambda x: models[x]["name"],
+        index=0  # Default to the first model in the list
+    )
+
+max_tokens_range = models[model_option]["tokens"]
+
+with col2:
+    # Adjust max_tokens slider dynamically based on the selected model
+    max_tokens = st.slider(
+        "Max Tokens:",
+        min_value=512,  # Minimum value to allow some flexibility
+        max_value=max_tokens_range,
+        # Default value or max allowed if less
+        value=min(32768, max_tokens_range),
+        step=512,
+        help=f"Adjust the maximum number of tokens (words) for the model's response. Max for selected model: {max_tokens_range}"
+    )
+
 
 st.divider()
 
@@ -66,7 +91,7 @@ if prompt := st.chat_input("Enter your prompt here..."):
                 }
                 for m in st.session_state.messages
             ],
-            max_tokens=25000,
+            max_tokens=max_tokens,
             stream=True
         )
 
