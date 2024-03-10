@@ -16,20 +16,24 @@ def icon(emoji: str):
 
 icon("🏎️")
 
-st.title("Groq Chat Streamlit Demo", anchor=False)
+st.subheader("Groq Chat Streamlit App", divider="rainbow", anchor=False)
 
 client = Groq(
     api_key=st.secrets["GROQ_API_KEY"],
 )
 
-# Initialize chat history
+# Initialize chat history and selected model
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+if "selected_model" not in st.session_state:
+    st.session_state.selected_model = None
+
 # Define model details
 models = {
+    "mixtral-8x7b-32768": {"name": "Mixtral-8x7b-Instruct-v0.1", "tokens": 32768, "developer": "Mistral"},
     "llama2-70b-4096": {"name": "LLaMA2-70b-chat", "tokens": 4096, "developer": "Meta"},
-    "mixtral-8x7b-32768": {"name": "Mixtral-8x7b-Instruct-v0.1", "tokens": 32768, "developer": "Mistral"}
+    "gemma-7b-it": {"name": "Gemma-7b-it", "tokens": 8192, "developer": "Google"}
 }
 
 # Layout for model selection and max_tokens slider
@@ -42,6 +46,11 @@ with col1:
         format_func=lambda x: models[x]["name"],
         index=0  # Default to the first model in the list
     )
+
+# Detect model change and clear chat history if model has changed
+if st.session_state.selected_model != model_option:
+    st.session_state.messages = []
+    st.session_state.selected_model = model_option
 
 max_tokens_range = models[model_option]["tokens"]
 
@@ -56,9 +65,6 @@ with col2:
         step=512,
         help=f"Adjust the maximum number of tokens (words) for the model's response. Max for selected model: {max_tokens_range}"
     )
-
-
-st.divider()
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
